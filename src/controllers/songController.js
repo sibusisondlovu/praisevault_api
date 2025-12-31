@@ -1,8 +1,14 @@
-const { Song } = require('../models');
+const { Song, Album, Artist } = require('../models');
 
 exports.getAllSongs = async (req, res) => {
     try {
-        const songs = await Song.findAll();
+        const songs = await Song.findAll({
+            include: [{
+                model: Album,
+                include: [Artist]
+            }]
+        });
+        // Flatten structure for frontend compatibility if needed, or update frontend
         res.json(songs);
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -11,29 +17,20 @@ exports.getAllSongs = async (req, res) => {
 
 exports.createSong = async (req, res) => {
     try {
-        const { title, artist, duration } = req.body;
+        const { title, duration, genre, AlbumId } = req.body;
 
         let url = '';
-        let coverUrl = '';
 
-        if (req.files) {
-            if (req.files.audio) {
-                // Assuming the server is reachable via the same host, we construct a relative or absolute URL.
-                // For simplicity in this demo, we'll store the relative path.
-                // In production, you might want full URLs or CDN links.
-                url = `/uploads/songs/${req.files.audio[0].filename}`;
-            }
-            if (req.files.cover) {
-                coverUrl = `/uploads/covers/${req.files.cover[0].filename}`;
-            }
+        if (req.files && req.files.audio) {
+            url = `/uploads/songs/${req.files.audio[0].filename}`;
         }
 
         const song = await Song.create({
             title,
-            artist,
-            duration,
-            url,
-            coverUrl
+            duration: duration || '0:00',
+            genre,
+            AlbumId,
+            url
         });
 
         res.status(201).json(song);

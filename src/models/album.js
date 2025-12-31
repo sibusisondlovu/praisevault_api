@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const Song = sequelize.define('Song', {
+const Album = sequelize.define('Album', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -11,20 +11,14 @@ const Song = sequelize.define('Song', {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    duration: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    genre: {
-        type: DataTypes.STRING,
+    releaseDate: {
+        type: DataTypes.DATE,
         allowNull: true,
     },
-    url: {
-        type: DataTypes.TEXT, // Audio file URL
+    coverUrl: {
+        type: DataTypes.TEXT,
         allowNull: false,
     },
-}, {
-    timestamps: true,
 });
 
-module.exports = Song;
+module.exports = Album;
