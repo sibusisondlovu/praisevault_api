@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+console.log('Connecting to DB:', process.env.DB_NAME, 'on', process.env.DB_HOST);
 const sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
